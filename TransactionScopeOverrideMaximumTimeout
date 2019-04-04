@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
+using System.Transactions;
+
+namespace BLL.Helpers
+{
+    public class OverrideTransactionManager
+    {
+        public static void TransactionScopeMaxTimeout(TimeSpan timeOut)
+        {
+            Type type = typeof(TransactionManager);
+            FieldInfo cachedMaxTimeout = type.GetField("s_cachedMaxTimeout", BindingFlags.NonPublic | BindingFlags.Static);
+            FieldInfo maxTimeout = type.GetField("s_maximumTimeout", BindingFlags.NonPublic | BindingFlags.Static);
+
+            cachedMaxTimeout.SetValue(null, true);
+            maxTimeout.SetValue(null, timeOut);
+        }
+    }
+}
